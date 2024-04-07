@@ -27,6 +27,8 @@ public:
         string columnName = "day_" + to_string(i);
         string alterTableSQL = "ALTER TABLE attendance ADD COLUMN " + columnName + " INTEGER DEFAULT 0";
         executeQuery(alterTableSQL);
+    }
+    for (int i = 0; i <= 144; i=i+2) {
         string x;
         if(i < 10)  x = "00";
         else if (i >= 10 && i < 100)  x = "0";
@@ -49,19 +51,35 @@ public:
         executeQuery(updateSQL);
     }
 
-    double calculateAttendancePercentage(int rollNo, int numDays) {
-        double totalDays = static_cast<double>(numDays);
+    void markAttendanceToday(int day,int numStart,int numEnd){
+        for(int i=numStart;i<=numEnd;i=i+2){
+            cout<<"Mark 1 if "<<i<<" is present else -1"<<endl;
+            int temp;
+            cin>>temp;
+            markAttendance(i,day,temp);
+        }
+    }
+
+    void calculateAttendancePercentage(int rollNo, int numDays) {
+        double totalDays = 0.0;
         double presentDays = 0.0;
+        double absentDays = 0.0;
         for (int i = 1; i <= numDays; ++i) {
             string columnName = "day_" + to_string(i);
             string selectSQL = "SELECT " + columnName + " FROM attendance WHERE roll_no = " + to_string(rollNo);
             int attendance;
             if (executeSelectQuery(selectSQL, attendance)) {
-                if (attendance == 1)
-                    presentDays += 1.0;
+                if (attendance == 1){
+                    presentDays += 1.0;    
+                    totalDays += 1.0;           
+                }else if(attendance == -1.0){
+                    absentDays += 1.0;
+                    totalDays += 1.0;
+                }
             }
         }
-        return (presentDays / totalDays) * 100.0;
+        double value = (presentDays / totalDays) * 100.0;
+        cout<<rollNo<<" your attendance percentage is "<<value<<"% "<<endl;
     }
 
     void displayTable() {
@@ -121,6 +139,9 @@ int main() {
     db.markAttendance(106122010, 7, 1);
     db.markAttendance(10612205, 1, 1);
     // Display the table
-    db.displayTable();
+    //cout<<db.calculateAttendancePercentage(106122012,10);
+    db.markAttendanceToday(3,106122012,106122012);
+    //db.displayTable();
+    db.calculateAttendancePercentage(106122012,10);
     return 0;
 }
