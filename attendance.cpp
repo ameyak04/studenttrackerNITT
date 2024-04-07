@@ -54,9 +54,9 @@ public:
     void markAttendanceToday(int day,int numStart,int numEnd){
         for(int i=numStart;i<=numEnd;i=i+2){
             cout<<"Mark 1 if "<<i<<" is present else -1"<<endl;
-            int temp;
-            cin>>temp;
-            markAttendance(i,day,temp);
+            int t;
+            cin>>t;
+            markAttendance(i,day,t);
         }
     }
 
