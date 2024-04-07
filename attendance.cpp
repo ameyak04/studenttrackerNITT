@@ -20,24 +20,24 @@ public:
         sqlite3_close(db);
     }
 
-  void createAttendanceTable() {
-    const char* createTableSQL = "CREATE TABLE IF NOT EXISTS attendance (roll_no INTEGER PRIMARY KEY)";
-    executeQuery(createTableSQL);
-    for (int i = 1; i <= 30; ++i) {
-        string columnName = "day_" + to_string(i);
-        string alterTableSQL = "ALTER TABLE attendance ADD COLUMN " + columnName + " INTEGER DEFAULT 0";
-        executeQuery(alterTableSQL);
+    void createAttendanceTable(int monthLength, int classStrength, string rollNoPrefix) {
+        const char* createTableSQL = "CREATE TABLE IF NOT EXISTS attendance (roll_no INTEGER PRIMARY KEY)";
+        executeQuery(createTableSQL);
+        for (int i = 1; i <= monthLength; ++i) {
+            string columnName = "day_" + to_string(i);
+            string alterTableSQL = "ALTER TABLE attendance ADD COLUMN " + columnName + " INTEGER DEFAULT 0";
+            executeQuery(alterTableSQL);
+        }
+        for(int i = 1; i<= classStrength; i++){
+            string x;
+            if(i < 10)  x = "00";
+            else if (i >= 10 && i < 100)  x = "0";
+            else    x = "";
+            string rollNo = rollNoPrefix + x + to_string(i);
+            string insertRollNoSQL = "INSERT INTO attendance(roll_no) VALUES(" + rollNo + ");";
+            executeQuery(insertRollNoSQL);
+        }
     }
-    for (int i = 0; i <= 144; i=i+2) {
-        string x;
-        if(i < 10)  x = "00";
-        else if (i >= 10 && i < 100)  x = "0";
-        else    x = "";
-        string rollNo = "106122" + x + to_string(i);
-        string insertRollNoSQL = "INSERT INTO attendance(roll_no) VALUES(" + rollNo + ");";
-        executeQuery(insertRollNoSQL);
-    }
-}
 
     void dropTable(){
         const char* ok = "DROP TABLE attendance";
@@ -134,7 +134,7 @@ private:
 int main() {
     AttendanceDatabase db("attendance.db");
     db.dropTable();
-    db.createAttendanceTable();
+    db.createAttendanceTable(30,40,"106122");
     db.markAttendance(106122012,5,1);
     db.markAttendance(106122010, 7, 1);
     db.markAttendance(10612205, 1, 1);
