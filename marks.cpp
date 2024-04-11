@@ -34,23 +34,81 @@ public:
             mp[rollNo] = m;
         }
     }
-    void getMarks(string rollno, string exam){ //print marks for an exam
-        cout<<mp[rollno][exam];
-        cout << endl;
-    }
+    
     void getMarksStats(string rollno){ //get Marks stats for a student
     int totalMarks=0;
         unordered_map<string, int> stu_mark = mp[rollno];
-        for(auto i: stu_mark){
-                totalMarks+=i.second;
-            }
+        for(auto i: stu_mark)
+            totalMarks+=i.second;
         cout<<"Marks Percentage: "<<totalMarks<<endl;
     }
 
-    void markMarks(string rollno, string exam, int marks){ //mark marks for a student
+    void updateMarks(string rollno, string exam, int marks){ //mark marks for a student
         mp[rollno][exam] = marks;
     }
+
+    void markMarksForAll(string exam){ //mark marks for all students
+        cout << "Enter the marks for each roll no :\n";
+        int m;
+        for(auto i: mp){
+            string rno = i.first;
+            cout << rno << ": ";
+            cin >> m;
+            //cout << endl;
+            updateMarks(rno, exam, m);
+        }
+    }
     
+    void highestMarks(string exam){ //to calculate the highest marks in an exam
+        int highest=0;
+        string roll=0;
+        for(auto it: mp){
+            highest = max(highest, it.second[exam]);
+            roll = (highest == it.second[exam])? it.first:roll;
+        }
+        cout<<"Highest marks in "<< exam <<" = "<<highest<<"scored by roll no" << roll << ".\n";
+    }
+ 
+    void highestTotalMark( string rollprefix, int rollrange){ //gets highest total marks/100 out of all roll no.s
+        int highest=0;
+        int roll=0;
+        for(int i = 1; i<=rollrange; i++){
+            string rollNo = giveRoll(rollprefix, i);
+            int sum=0;
+            for(auto it: exam){
+                sum+=mp[rollNo][it.first];
+            }
+            highest=max(sum,highest);
+            roll=(highest==sum)?i:roll;
+        }
+        cout<<"Highest Total Mark is "<<highest<<" recieved by rollNo "<<roll<<endl;
+    }
+
+    void averageMarks(string exam){ //to calculate the average marks in an exam
+        float sum=0;
+        for(auto it: mp)
+            sum += it.second[exam];
+        float average = sum/(mp.size());
+        cout<<"Average marks in " << exam << " = " << average << ".\n";
+    }
+
+    void totalAverage( string rollprefix, int rollrange){
+        int sum=0;
+        for(int i = 1; i<=rollrange; i++){
+            string rollNo = giveRoll(rollprefix, i);
+            for(auto it: exam){
+                sum+=mp[rollNo][it.first];
+            }
+        }
+        float average = sum/rollrange;
+        cout<<"Total Average Mark is "<<average<<" !!! "<<endl;
+    }    
+    void getMarks(string rollno, string exam){ //print marks for an exam
+        cout << mp[rollno][exam] << endl;
+        averageMarks(exam);
+        cout << endl;
+    }
+
 };
 
 
@@ -98,11 +156,14 @@ public:
         SubjectClass* sc = subjects[subj_class];
         sc->getMarksStats(rollno);
     }
-    void markMarks(string subj_class, string rollno, string exam,int marks){
+    void updateMarks(string subj_class, string rollno, string exam,int marks){
         SubjectClass* sc = subjects[subj_class];
-        sc->markMarks(rollno, exam, marks);
+        sc->updateMarks(rollno, exam, marks);
     }
-    
+    void markMarksForAll(string subj_class, string exam){
+        SubjectClass* sc = subjects[subj_class];
+        sc->markMarksForAll(exam);
+    }
 };
 
 unordered_map<string, Student*> student_list;
@@ -157,7 +218,7 @@ int main(){
             cout << "\nName: " << T->name << endl;
             cout << "Classes taught:\n";
             T->displayClasses();
-            cout << "1. View Marks\n2. Mark marks\n";
+            cout << "1. View Marks\n2. Update marks\n3. Mark marks for all\n";
             int c1;
             cin >> c1;
             switch(c1){
@@ -194,10 +255,19 @@ int main(){
                     cin >> su;
                     cout << "Enter roll number, exam:\n";
                     cin >> rno >> m;
-                    cout << "Enter marks";
+                    cout << "Enter marks: ";
                     cin >> marks;
-                    T->markMarks(su, rno, m, marks);
+                    T->updateMarks(su, rno, m, marks);
                     cout << "Marked.\n\n";
+                    break;
+                }
+                case 3: {
+                    cout << "Enter subject_section:";
+                    string su, exam;
+                    cin >> su;
+                    cout << "Enter exam:";
+                    cin >> exam;           
+                    T->markMarksForAll(su, exam);
                     break;
                 }
 
@@ -231,7 +301,7 @@ int main(){
         }
         else
             cout << "Incorrect choice!" << endl;
-        cout << "Play again? 1.Yes 2.No\n";
+        cout << "Login again? 1.Yes 2.No\n";
         cin >> c;
         if(c == 1) continue;
         else break;
