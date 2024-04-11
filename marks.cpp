@@ -132,3 +132,109 @@ public:
         }
     }
 };
+
+int main(){
+    while(true){
+        cout << "1. Admin\n2. Teacher\n3. Student\n";
+        int c;
+        cin >> c;
+        if(c == 1){
+            cout << "To create a class, enter subject, section, teacher ID, teacher name, roll no. prefix, roll no. range:\n";
+            string sub, sec, tid, tname, roll_pref; 
+            int roll_range;
+            cin >> sub >> sec >> tid >> tname >> roll_pref;
+            cin >> roll_range;
+            Admin A;
+            A.createClass(sub, sec, tid, tname, roll_pref, roll_range);
+            cout << "Class created.\n\n";
+        }
+        else if(c == 2){
+            cout << "Enter teacher ID:";
+            string tid;
+            cin >> tid;
+            
+            Teacher* T = teacher_list[tid];
+            cout << "\nName: " << T->name << endl;
+            cout << "Classes taught:\n";
+            T->displayClasses();
+            cout << "1. View Marks\n2. Mark marks\n";
+            int c1;
+            cin >> c1;
+            switch(c1){
+                case 1: {
+                    cout << "Enter subject_section:";
+                    string su, rno;
+                    cin >> su;
+                    cout << "Enter roll number:";
+                    cin >> rno;
+                    cout << "1. View marks for an exam.\n2. View marks stats.\n";
+                    int c2;
+                    cin >> c2;
+                    switch(c2){
+                        case 1:{
+                            string m;
+                            cout << "Enter exam:";
+                            cin >> m;
+                            T->getExamMarks(su, rno, m);
+                            break;
+                        }
+                        case 2: {
+                            T->getMarksStats(su, rno);
+                            break;
+                        }
+                        default: cout << "Incorrect choice!" << endl;
+                    }
+                    break;
+                }
+
+                case 2:{
+                    cout << "Enter subject_section:";
+                    string su, rno, m;
+                    int marks;
+                    cin >> su;
+                    cout << "Enter roll number, exam:\n";
+                    cin >> rno >> m;
+                    cout << "Enter marks";
+                    cin >> marks;
+                    T->markMarks(su, rno, m, marks);
+                    cout << "Marked.\n\n";
+                    break;
+                }
+
+                default: cout << "Incorrect choice!\n\n";
+            }
+        }
+        else if(c == 3){
+            string sub, rno;
+            cout << "Enter roll number:";
+            cin >> rno;
+            Student* S = student_list[rno];
+            cout << "\nSubjects taken:\n";
+            S->displaySubjects();
+            cout << "1. View marks for an exam.\n2. View marks stats.\n";
+            int c3;
+            cin >> c3;
+            cout << "Enter subject:";
+            cin >> sub;
+            switch(c3){
+                case 1: {
+                    string m;
+                    cout << "Enter exam:";
+                    cin >> m;
+                    S->getExamMarks(sub, m);
+                    break;
+                }
+                case 2: {
+                    S->getMarksStats(sub);
+                }
+            }
+        }
+        else
+            cout << "Incorrect choice!" << endl;
+        cout << "Play again? 1.Yes 2.No\n";
+        cin >> c;
+        if(c == 1) continue;
+        else break;
+    }
+    return 0;
+}
