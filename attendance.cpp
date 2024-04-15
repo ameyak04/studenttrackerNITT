@@ -61,6 +61,8 @@ public:
             }
         }
         float total = present + absent;
+        cout << "Attended: " << present << endl;
+        cout << "Absent: " << absent << endl;
         cout << "Attendance Percentage: " << (present*100)/total << endl;
         cout << "More classes needed to meet t75% criteria: " << 3*absent-present << "\n\n";
     }
