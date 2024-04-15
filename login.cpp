@@ -14,8 +14,7 @@ public:
     virtual bool verifyLogin(int id, const string &password) = 0;
 };
 
-class Student : public LoginSystem
-{
+class Student : public LoginSystem{
 public:
     Student(const unordered_map<int, string> &map) : LoginSystem(map) {}
 
@@ -45,8 +44,7 @@ public:
     }
 };
 
-class Teacher : public LoginSystem
-{
+class Teacher : public LoginSystem{
 public:
     Teacher(const unordered_map<int, string> &map) : LoginSystem(map) {}
 
@@ -76,8 +74,7 @@ public:
     }
 };
 
-int main()
-{
+int main(){
     // Creating maps of student and teacher IDs mapped with passwords
     unordered_map<int, string> studentMap = {
         {1234, "student123"},

@@ -9,11 +9,11 @@ private:
 public:
     Course(string name, int credits) : name(name), credits(credits) {}
 
-    string getName() const {
+    string getName() const {  //getter function to get name 
         return name;
     }
 
-    int getCredits() const {
+    int getCredits() const {   //getter function to get credits
         return credits;
     }
 };
@@ -27,7 +27,7 @@ private:
 public:
     Department(string name) : name(name) {}
 
-    string getName() const {
+    string getName() const {   //getter function to get name 
         return name;
     }
 
@@ -62,7 +62,7 @@ public:
         departments.push_back(department);
     }
 
-    void displayDepartments() const {
+    void displayDepartments() const {   //display all available departments
         cout << "Available Departments:" << endl;
         for (const Department& department : departments) {
             cout << department.getName() << endl;
@@ -71,7 +71,7 @@ public:
         }
     }
 
-    bool registerCourses(Department& department) const {
+    bool registerCourses(Department& department) const {    //register courses for a department
         department.availableCourses();
         vector<int> cred;
         for (const Course& course : department.getCourses()) {

@@ -20,9 +20,8 @@ string giveRoll(string pref, int n){
 class SubjectClass {
 public:
     string sub, sec;
-    unordered_map<string, unordered_map<string, int>> mp;
-    //unordered_map<string, float> att_perc; //stores marks percentage for each student
-    SubjectClass(string sb, string sc, string rollprefix, int rollrange){
+    map<string, unordered_map<string, int>> mp;                  //to store the exam marks info. for each student in a class
+    SubjectClass(string sb, string sc, string rollprefix, int rollrange){  //constructor to initialize thr map
         sub = sb;
         sec = sc;
         for(int i = 1; i<=rollrange; i++){
@@ -35,7 +34,7 @@ public:
         }
     }
     
-    void getMarksStats(string rollno){ //get Marks stats for a student
+    void getMarksStats(string rollno){                      //get Marks stats for a student
     int totalMarks=0;
         unordered_map<string, int> stu_mark = mp[rollno];
         for(auto i: stu_mark)
@@ -47,19 +46,18 @@ public:
         mp[rollno][exam] = marks;
     }
 
-    void markMarksForAll(string exam){ //mark marks for all students
+    void markMarksForAll(string exam){                      //mark marks for all students
         cout << "Enter the marks for each roll no :\n";
         int m;
         for(auto i: mp){
             string rno = i.first;
             cout << rno << ": ";
             cin >> m;
-            //cout << endl;
             updateMarks(rno, exam, m);
         }
     }
     
-    void highestMarks(string exam){ //to calculate the highest marks in an exam
+    void highestMarks(string exam){                         //to calculate the highest marks in an exam
         int highest=0;
         string roll=0;
         for(auto it: mp){
@@ -119,16 +117,16 @@ public:
     Student(string roll){
         rollNo = roll;
     }
-    void displaySubjects(){
+    void displaySubjects(){                     //displays the list of subjects student is enrolled in
         for(auto i: subjects)
             cout << i.first << endl;
         cout << "\n";
     }
-    void getExamMarks(string sub, string exam){
+    void getExamMarks(string sub, string exam){ //gets the marks for an exam
         SubjectClass* sc = subjects[sub];
         sc->getMarks(rollNo, exam);
     }
-    void getMarksStats(string sub){
+    void getMarksStats(string sub){         //get total marks statistics
         SubjectClass* sc = subjects[sub];
         sc->getMarksStats(rollNo);
     }
@@ -143,29 +141,31 @@ public:
         teacher_id = tid;
         name = tname;
     }
-    void displayClasses(){
+    void displayClasses(){                         //to show list of subjects the teacher teaches
         for(auto i: subjects)
             cout << i.first << endl;
         cout << "\n";
     }
-    void getExamMarks(string subj_class, string rollno, string exam){
+    void getExamMarks(string subj_class, string rollno, string exam){ //gets the marks for an exam for a student
         SubjectClass* sc = subjects[subj_class];
         sc->getMarks(rollno, exam);
     }
-    void getMarksStats(string subj_class, string rollno){
+    void getMarksStats(string subj_class, string rollno){           //get total marks statistics for a student
         SubjectClass* sc = subjects[subj_class];
         sc->getMarksStats(rollno);
     }
-    void updateMarks(string subj_class, string rollno, string exam,int marks){
+    void updateMarks(string subj_class, string rollno, string exam,int marks){  //update marks for a student
         SubjectClass* sc = subjects[subj_class];
         sc->updateMarks(rollno, exam, marks);
     }
-    void markMarksForAll(string subj_class, string exam){
+    void markMarksForAll(string subj_class, string exam){           //mark marks for all students for an exam
         SubjectClass* sc = subjects[subj_class];
         sc->markMarksForAll(exam);
     }
 };
 
+
+//global variables to store the already created Teacher and Student objects 
 unordered_map<string, Student*> student_list;
 unordered_map<string, Teacher*> teacher_list;
 

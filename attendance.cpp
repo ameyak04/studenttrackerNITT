@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-unordered_map<string, int> months = {
+unordered_map<string, int> months = { //stores number of days in each month
     {"Jan", 31},
     {"Feb", 28},
     {"Mar", 31},
@@ -28,9 +28,8 @@ string giveRoll(string pref, int n){
 class SubjectClass {
 public:
     string sub, sec;
-    unordered_map<string, unordered_map<string, vector<int>>> mp;
-    //unordered_map<string, float> att_perc; //stores attendance percentage for each student
-    SubjectClass(string sb, string sc, string rollprefix, int rollrange){
+    map<string, unordered_map<string, vector<int>>> mp;           //to store the attendance info. for each student in a class
+    SubjectClass(string sb, string sc, string rollprefix, int rollrange){   //constr. to initialize the map
         sub = sb;
         sec = sc;
         for(int i = 1; i<=rollrange; i++){
@@ -43,13 +42,13 @@ public:
             mp[rollNo] = m;
         }
     }
-    void getAttendance(string rollno, string month){ //print attendance for a month
+    void getAttendance(string rollno, string month){            //print attendance for a month
         unordered_map<string, vector<int>> stu_att = mp[rollno];
         for(auto i: stu_att[month])
             cout << i << " ";
         cout << endl;
     }
-    void getAttendanceStats(string rollno){ //get attendance stats for a student
+    void getAttendanceStats(string rollno){                     //get attendance stats for a student
         float present = 0, absent = 0;
         unordered_map<string, vector<int>> stu_att = mp[rollno];
         for(auto i: stu_att){
@@ -64,14 +63,15 @@ public:
         cout << "Attended: " << present << endl;
         cout << "Absent: " << absent << endl;
         cout << "Attendance Percentage: " << (present*100)/total << endl;
-        cout << "More classes needed to meet t75% criteria: " << 3*absent-present << "\n\n";
+        if(present/total < 0.75)
+            cout << "More classes needed to meet 75% criteria: " << 3*absent-present << "\n\n";
     }
 
     void markAttendance(string rollno, string month, int date, int status){ //mark attendance for a student
         mp[rollno][month][date - 1] = status;
     }
 
-    void takeDayAttendance(string month, int date){
+    void takeDayAttendance(string month, int date){                        //mark attendance for every student on a particular date
         cout << "Enter 1 for present, -1 for absent.\n";
         int st;
         for(auto i: mp){
@@ -88,20 +88,20 @@ public:
 class Student {
 public:
     string rollNo;
-    unordered_map<string, SubjectClass*> subjects; //list of subjects student is enrolled in
+    unordered_map<string, SubjectClass*> subjects;      //list of subjects student is enrolled in
     Student(string roll){
         rollNo = roll;
     }
-    void displaySubjects(){
+    void displaySubjects(){                             //displays the list of subjects student is enrolled in
         for(auto i: subjects)
             cout << i.first << endl;
         cout << "\n";
     }
-    void getMonthAttendance(string sub, string month){
+    void getMonthAttendance(string sub, string month){ //get the attendance info. for a month
         SubjectClass* sc = subjects[sub];
         sc->getAttendance(rollNo, month);
     }
-    void getAttendanceStats(string sub){
+    void getAttendanceStats(string sub){                //get overall attendance stats
         SubjectClass* sc = subjects[sub];
         sc->getAttendanceStats(rollNo);
     }
@@ -116,36 +116,37 @@ public:
         teacher_id = tid;
         name = tname;
     }
-    void displayClasses(){
+    void displayClasses(){      //to show list of subjects the teacher teaches
         for(auto i: subjects)
             cout << i.first << endl;
         cout << "\n";
     }
-    void getMonthAttendance(string subj_class, string rollno, string month){
+    void getMonthAttendance(string subj_class, string rollno, string month){ //get the attendance info. for a month for a student
         SubjectClass* sc = subjects[subj_class];
         sc->getAttendance(rollno, month);
     }
-    void getAttendanceStats(string subj_class, string rollno){
+    void getAttendanceStats(string subj_class, string rollno){              //get overall attendance stats for a student
         SubjectClass* sc = subjects[subj_class];
         sc->getAttendanceStats(rollno);
     }
-    void markAttendance(string subj_class, string rollno, string month, int date, int status){
+    void markAttendance(string subj_class, string rollno, string month, int date, int status){ //mark att. for a student on a particular date
         SubjectClass* sc = subjects[subj_class];
         sc->markAttendance(rollno, month, date, status);
     }
-    void takeTodaysAttendance(string subj_class, string month, int date){
+    void takeTodaysAttendance(string subj_class, string month, int date){ //mark att. for all students on a particular date
         SubjectClass* sc = subjects[subj_class];
         sc->takeDayAttendance(month, date);
     }
     
 };
 
+//global variables to store the already created Teacher and Student objects 
 unordered_map<string, Student*> student_list;
 unordered_map<string, Teacher*> teacher_list;
 
 class Admin {
 public:
-    void createClass(string sub, string sec, string tid, string tname, string roll_pref, int roll_range){
+    void createClass(string sub, string sec, string tid, string tname, string roll_pref, int roll_range){  
         SubjectClass *obj = new SubjectClass(sub, sec, roll_pref, roll_range);
         for(int i = 1; i<=roll_range; i++){
             
