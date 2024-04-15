@@ -1,8 +1,11 @@
 # studenttrackerNITT
 
 to run the code use the following command
-``g++ <filename>.cpp -o output``
-``./output``
+
+```bash 
+g++ <filename>.cpp -o output
+./output
+```
 
 **Workflow and Burndown --> SDLC planning + tracking sheet**
 https://docs.google.com/spreadsheets/d/1hq6U1XUhPrw_CDQ2SdCVl_JpOs9tjZcj5LrHkszA5J0/edit#gid=345136652
