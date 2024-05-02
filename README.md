@@ -7,7 +7,7 @@ g++ <filename>.cpp -o output
 ./output
 ```
 
-**Timeline Chart**
+<h2>Timeline Chart</h2>
 https://docs.google.com/spreadsheets/d/1hq6U1XUhPrw_CDQ2SdCVl_JpOs9tjZcj5LrHkszA5J0/edit#gid=345136652
 
 <h2>Class Diagram:</h2>
